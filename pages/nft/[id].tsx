@@ -17,16 +17,13 @@ function SenghDropPage({ collection }: Props) {
   return (
     <div className="flex h-screen flex-col lg:grid lg:grid-cols-10">
       {/* LEFT SIDE */}
-      <div className="flex flex-1 flex-col bg-white bg-slate-100/10 p-40 lg:col-span-6">
+      <div className="flex flex-1 flex-col bg-white bg-slate-100/10 sm:p-20 lg:col-span-6 lg:p-40">
         {/* TOP HEADER STARTS */}
-        <header className="flex items-center justify-between ">
+        <header className="flex items-center justify-between">
           <Link href={`/`}>
-            <h1 className="w-52 cursor-pointer text-xl font-extralight sm:w-80">
+            <h1 className="w-52 cursor-pointer text-sm lg:text-2xl font-extralight">
               Market for
-              <span className="font-extrabold underline decoration-blue-300/50">
-                {' '}
-                SENGH{' '}
-              </span>{' '}
+              <span className="font-extrabold underline decoration-blue-300/50"> SENGH </span>
               NFT
             </h1>
           </Link>
@@ -38,26 +35,26 @@ function SenghDropPage({ collection }: Props) {
             {address ? 'Sign Out' : 'Sign In'}
           </button>
         </header>
-        <hr className="my-4 border-2" />
+        <hr className="my-4 border-2 " />
         {/* TOP HEADER ENDS */}
 
         {/* INFORMATION ABOUT NFT STARTS */}
-        <div className="mt-10 flex flex-1 flex-col items-center space-y-6 text-center lg:justify-center lg:space-y-0">
+        <div className="lg:mt-10 sm:mt-5 flex flex-1 flex-col items-center space-y-6 text-center lg:justify-center lg:space-y-0">
           <img
-            className="w-80 object-cover pb-10 lg:h-60"
+            className="lg:w-80 object-cover pb-10 lg:h-60 sm:w-60 sm:h-40"
             src={urlFor(collection.mainImage).url()}
             alt=""
           />
-          <h1 className="lg:text-extrabold text-3xl font-bold lg:text-5xl">
+          <h1 className="lg:text-extrabold text-2xl font-bold lg:text-5xl">
             The first SENGH drop
           </h1>
-          <p className="pt-2 text-xl text-orange-300">0/60 NFT'S CLAIMED</p>
+          <p className="pt-2 lg:text-xl text-orange-300 sm:text-xs">0/60 NFT'S CLAIMED</p>
         </div>
         {/* INFORMATION ABOUT NFT ENDS */}
 
         {/* MINTING STARTS */}
-        <button className="h-16 w-full rounded-full bg-orange-300/80 font-extrabold text-white ">
-          <span className="text-2xl">Mint NFT (0.01 ETH)</span>{' '}
+        <button className="lg:h-16 lg:w-full rounded-full bg-orange-300/80 font-extrabold text-white sm:w-1/2">
+          <span className="lg:text-2xl sm:text-sm">Mint NFT (0.01 ETH)</span>{' '}
           {address && (
             <p className="text-white-300 text-center text-xs">
               Logged in with wallet ...{address.substring(address.length - 6)}
