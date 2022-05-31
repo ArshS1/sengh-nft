@@ -1,29 +1,118 @@
-import React from 'react'
-import { useAddress, useDisconnect, useMetamask } from '@thirdweb-dev/react'
+import React, { useState, useEffect } from 'react'
+import {
+  useAddress,
+  useDisconnect,
+  useMetamask,
+  useNFTDrop,
+} from '@thirdweb-dev/react'
 import { GetServerSideProps } from 'next'
 import { sanityClient, urlFor } from '../../sanity'
 import { Collection } from '../../typings'
 import Link from 'next/link'
+import { BigNumber } from 'ethers'
+import toast, {Toaster} from 'react-hot-toast'
 
 interface Props {
   collection: Collection
 }
 
 function SenghDropPage({ collection }: Props) {
+  // get information / set state
+  const [claimedSupply, setClaimedSupply] = useState<number>(0)
+  const [totalSupply, setTotalSupply] = useState<BigNumber>()
+  const [price, setPrice] = useState<string>('...')
+
+  // pass in the collection id to fetch it's supply data
+  const nftDrop = useNFTDrop(collection.address)
+
+  // loading
+  const [loading, setLoading] = useState<boolean>(true)
+
+  useEffect(() => {
+    // empty return if no change
+    if (!nftDrop) return
+
+    const fetchData = async () => {
+      setLoading(true)
+      const price = await nftDrop.claimConditions.getAll()
+      const claimed = await nftDrop.getAllClaimed()
+      const total = await nftDrop.totalSupply()
+
+      setClaimedSupply(claimed.length)
+      setTotalSupply(total)
+      setPrice(price?.[0].currencyMetadata.displayValue)
+
+      setLoading(false)
+    }
+    fetchData()
+  }, [nftDrop])
+
+  const minting = () => {
+    if (!nftDrop || !address) return
+
+    const quant = 1
+
+    setLoading(true)
+
+    const notification = toast.loading("Minting...", {
+      style: {
+        background: "white",
+        color: "lightblue", 
+        fontWeight: "bolder",
+        fontSize: "20px",
+        padding: "20px"
+      }
+    })
+
+    nftDrop
+      .claimTo(address, quant)
+      .then(async (transaction) => {
+        toast("Minting Successful!", {
+          duration: 8000,
+          style: {
+            background: "green",
+            color: "white", 
+            fontWeight: "bolder",
+            fontSize: "20px",
+            padding: "20px"
+          }
+        })
+      })
+      .catch((err) => {
+        toast("Minting Failed!", {
+          duration: 8000,
+          style: {
+            background: "red",
+            color: "white", 
+            fontWeight: "bolder",
+            fontSize: "20px",
+            padding: "20px"
+          }
+        })      })
+      .finally(() => {
+        setLoading(false)
+        toast.dismiss(notification)
+      })
+  }
+
   // authorization
   const connectMetamask = useMetamask()
   const address = useAddress()
   const disconnect = useDisconnect()
   return (
     <div className="flex h-screen flex-col lg:grid lg:grid-cols-10">
+      <Toaster position='top-center'/>
+
       {/* LEFT SIDE */}
       <div className="flex flex-1 flex-col bg-white bg-slate-100/10 sm:p-20 lg:col-span-6 lg:p-40">
         {/* TOP HEADER STARTS */}
         <header className="flex items-center justify-between">
           <Link href={`/`}>
-            <h1 className="w-52 cursor-pointer text-sm lg:text-2xl font-extralight">
+            <h1 className="w-52 cursor-pointer text-sm font-extralight lg:text-2xl">
               Market for
-              <span className="font-extrabold underline decoration-blue-300/50"> SENGH </span>
+              <span className="font-extrabold underline decoration-blue-300/50">
+                SENGH{' '}
+              </span>
               NFT
             </h1>
           </Link>
@@ -39,26 +128,63 @@ function SenghDropPage({ collection }: Props) {
         {/* TOP HEADER ENDS */}
 
         {/* INFORMATION ABOUT NFT STARTS */}
-        <div className="lg:mt-10 sm:mt-5 flex flex-1 flex-col items-center space-y-6 text-center lg:justify-center lg:space-y-0">
+        <div className="flex flex-1 flex-col items-center space-y-6 text-center sm:mt-5 lg:mt-10 lg:justify-center lg:space-y-0">
           <img
-            className="lg:w-80 object-cover pb-10 lg:h-60 sm:w-60 sm:h-40"
+            className="object-cover pb-10 sm:h-40 sm:w-60 lg:h-60 lg:w-80"
             src={urlFor(collection.mainImage).url()}
             alt=""
           />
           <h1 className="lg:text-extrabold text-2xl font-bold lg:text-5xl">
             The first SENGH drop
           </h1>
-          <p className="pt-2 lg:text-xl text-orange-300 sm:text-xs">0/60 NFT'S CLAIMED</p>
+
+          {loading ? (
+            <p className="animate-pulse pt-2 text-blue-300 sm:text-xs lg:text-xl">
+              Loading supply...
+            </p>
+          ) : (
+            <p className="pt-2 text-orange-300 sm:text-xs lg:text-xl">
+              {claimedSupply} / {totalSupply?.toString()} NFT'S CLAIMED
+            </p>
+          )}
+
+          {loading && (
+            <img
+              className="h-60 w-60 object-contain"
+              src="https://cdn.hackernoon.com/images/0*4Gzjgh9Y7Gu8KEtZ.gif"
+            ></img>
+          )}
         </div>
         {/* INFORMATION ABOUT NFT ENDS */}
 
         {/* MINTING STARTS */}
-        <button className="lg:h-16 lg:w-full rounded-full bg-orange-300/80 font-extrabold text-white sm:w-1/2">
-          <span className="lg:text-2xl sm:text-sm">Mint NFT (0.01 ETH)</span>{' '}
-          {address && (
-            <p className="text-white-300 text-center text-xs">
-              Logged in with wallet ...{address.substring(address.length - 6)}
-            </p>
+        <button
+          onClick={minting}
+          className="rounded-full bg-orange-300/80 font-extrabold text-white disabled:bg-gray-400 sm:w-1/2 lg:h-16 lg:w-full"
+          disabled={
+            loading || claimedSupply === totalSupply?.toNumber() || !address
+          }
+        >
+          {loading ? (
+            <>Loading</>
+          ) : claimedSupply === totalSupply?.toNumber() ? (
+            <>Sold Out</>
+          ) : !address ? (
+            <>Sign in to Mint NFT</>
+          ) : (
+            <div>
+              <div>
+                <span className="sm:text-sm lg:text-2xl">
+                  Mint NFT ({price} ETH)
+                </span>
+                {address && (
+                  <p className="text-white-300 text-center text-xs">
+                    Logged in with wallet ...
+                    {address.substring(address.length - 6)}
+                  </p>
+                )}
+              </div>
+            </div>
           )}
         </button>
         {/* MINTING ENDS */}
