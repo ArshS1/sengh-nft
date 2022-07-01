@@ -14,7 +14,7 @@ const Home = ({ collections }: Props) => {
       {/* HEADER SECTION - inject html into the header */}
       <Head>
         <title>Sengh NFT</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/" />
       </Head>
       {/* HEADER SECTIONS ENDS HERE */}
 
@@ -30,7 +30,7 @@ const Home = ({ collections }: Props) => {
         <div>
           {collections.map((collection) => (
             <Link href={`/nft/${collection.slug.current}`}>
-              <div className="flex cursor-pointer flex-col items-center transition-all duration-100 ease-in-out hover:scale-90">
+              <div className="flex cursor-pointer flex-col items-center transition-all duration-500 ease-in-out hover:scale-90">
                 <img
                   className="mt-10 h-60 rounded-3xl object-cover"
                   src={urlFor(collection.mainImage).url()}
