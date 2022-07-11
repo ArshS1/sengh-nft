@@ -1,3 +1,6 @@
+This website works with the Ethereum blockchain to create smart contracts and interacts with Metamask wallet to allow users to make transactions securely. The steps to run the project locally are shown below. 
+
+
 # Next.js + Tailwind CSS Example
 
 This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
