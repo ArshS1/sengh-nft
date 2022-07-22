@@ -1,5 +1,18 @@
 This website works with the Ethereum blockchain to create smart contracts and interacts with Metamask wallet to allow users to make transactions securely. The steps to run the project locally are shown below. 
 
+A picture of the main page is shown below: 
+![Screen Shot 2022-07-21 at 9 20 46 PM](https://user-images.githubusercontent.com/90710790/180341368-6807b6f0-0246-4c28-9cf4-8348c5a80e24.png)
+
+## Tech Stack: 
+![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)&nbsp;
+![Typescript](https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white)&nbsp;
+![Nextjs](https://img.shields.io/badge/Nextjs-007ACC?style=for-the-badge&logo=Nextjs&logoColor=white)&nbsp;
+![React](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white)&nbsp;
+![HTML](https://img.shields.io/badge/HTML5-E34F26?style=for-the-badge&logo=html5&logoColor=white)&nbsp;
+![CSS](https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white)&nbsp;
+
+
+
 
 # Next.js + Tailwind CSS Example
 
